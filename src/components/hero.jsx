@@ -47,24 +47,25 @@ const HomePage = () => {
   };
 
   const sendAudioToBackend = async () => {
-    const formData = new FormData();
-    console.log(masterAudioBlob)
-    console.log(slaveAudioBlob)
-    formData.append("master_audio", masterAudioBlob, "master_audio.wav");
-    formData.append("slave_audio", slaveAudioBlob, "slave_audio.wav");
-    formData.append("language", "English");
+    
+const formData = new FormData();
+formData.append('master_audio', masterAudioBlob, 'master_audio.wav', { type: 'audio/wav' });
+formData.append('slave_audio',slaveAudioBlob, 'slave_audio.wav', { type: 'audio/wav' });
+formData.append('language', 'English');
 
-    try {
-      const response = await axios.post("http://127.0.0.1:8000/match", formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+fetch('http://127.0.0.1:8000/match', {
+  method: 'POST',
+  body: formData
+})
+.then(response => response.json())
+.then(data => {
+  console.log('Success:', data);
+})
+.catch((error) => {
+  console.error('Error:', error);
+});
 
-     
-    } catch (error) {
-      console.error('Error sending audio to backend:', error);
-    }
+    
   };
 
  const onMasterRecordingComplete = (blob) => {
