@@ -47,7 +47,8 @@ const HomePage = () => {
   };
 
   const sendAudioToBackend = async () => {
-    
+    console.log(masterAudioBlob)
+    console.log(slaveAudioBlob)
 const formData = new FormData();
 formData.append('master_audio', masterAudioBlob, 'master_audio.wav', { type: 'audio/wav' });
 formData.append('slave_audio',slaveAudioBlob, 'slave_audio.wav', { type: 'audio/wav' });
@@ -62,9 +63,9 @@ fetch('http://127.0.0.1:8000/match', {
   console.log('Success:', data);
 })
 .catch((error) => {
-  console.error('Error:', error);
+  console.log('Error:', error);
 });
-
+ 
     
   };
 
