@@ -1,50 +1,28 @@
-import React, { useCallback, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
+import React, { useState } from 'react';
 import { FaCheckCircle, FaCircle, FaUpload, FaCheck } from 'react-icons/fa';
 import hero from '../assets/hero.png'; // Make sure to use the correct path to your image
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import AudioRecorder from './AudioRecorder';
 import AudioUpload from './AudioUpload';
+import AudioRecorderer from './AudioRecorder';
 
 const HomePage = () => {
    const [masterAudioBlob, setMasterAudioBlob] = useState(null);
   const [slaveAudioBlob, setSlaveAudioBlob] = useState(null);
-  const [activeDropzone, setActiveDropzone] = useState('');
+  
   const [master, setMaster] = useState(true);
   const [slave, setSlave] = useState(false);
   const [masterRec, setMasterRec] = useState(true);
   const [slaveRec, setSlaveRec] = useState(false);
   const [language, setLanguage] = useState(false);
   const [keyword, setKeyword] = useState(false);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [uploadProgress, setUploadProgress] = useState(0);
+  
+
   const navigate = useNavigate();
 
-  const handleUpload = () => {
-
-
-    const formData = new FormData();
-    formData.append('file', selectedFile);
-
-    axios.post('/upload', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      },
-      onUploadProgress: (progressEvent) => {
-        const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-        setUploadProgress(progress);
-      }
-    })
-    .then((response) => {
-      console.log('File uploaded successfully:', response.data);
-      setUploadProgress(0); 
-    })
-    .catch((error) => {
-      console.error('Error uploading file:', error);
-      setUploadProgress(0);  
-    });
-  };
+  const [showMaster,setShowMaster] = useState(true);
+  const [showSlave,setShowSlave] = useState(true)
 
   const sendAudioToBackend = async () => {
     console.log(masterAudioBlob)
@@ -136,13 +114,16 @@ const onSlaveRecordingComplete = (blob) => {
                 <div>
                  <AudioUpload master={true} setMasterAudioBlob={setMasterAudioBlob} setMasterRec={setMasterRec}></AudioUpload>
                  {masterRec}
-                  <AudioRecorder label="master" onRecordingComplete={onMasterRecordingComplete} />
+
+                  {showMaster && <AudioRecorderer label="master" onRecordingComplete={onMasterRecordingComplete} />}
                  
                 </div>
                 <div>
                   <AudioUpload slave={true} setSlaveAudioBlob={setSlaveAudioBlob} setSlaveRec={setSlaveRec}></AudioUpload>
                   {slaveRec}
-                  <AudioRecorder label="slave" onRecordingComplete={onSlaveRecordingComplete} />
+                  {!showSlave &&           <div className='px-5 py-3 w-[20%] flex mx-auto justify-center items-center rounded-md text-md hover:cursor-pointer  bg-gradient-to-b  from-[#1BCBBF] to-[#3476E5] ' onClick={sendAudioToBackend}>Get result</div>
+}
+                  {showSlave && <AudioRecorderer label="slave" onRecordingComplete={onSlaveRecordingComplete} />}
                  
                 </div>
               </div>

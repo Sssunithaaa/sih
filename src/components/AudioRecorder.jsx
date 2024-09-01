@@ -4,12 +4,11 @@ import WaveSurfer from "wavesurfer.js";
 import { AiFillAudio, AiOutlineAudioMuted } from "react-icons/ai";
 import { FaTimes } from "react-icons/fa";
 
-const AudioRecorder = ({ label, onClose,onRecordingComplete }) => {
+const AudioRecorder = ({ label, onClose, onRecordingComplete }) => {
   const waveformRef = useRef(null);
   const wavesurfer = useRef(null);
 
   useEffect(() => {
-    // Initialize WaveSurfer when the component mounts
     if (waveformRef.current) {
       wavesurfer.current = WaveSurfer.create({
         container: waveformRef.current,
@@ -23,36 +22,31 @@ const AudioRecorder = ({ label, onClose,onRecordingComplete }) => {
     }
 
     return () => {
-      // Cleanup WaveSurfer instance when the component unmounts
       if (wavesurfer.current) {
         wavesurfer.current.destroy();
       }
     };
   }, []);
 
- const handleDataAvailable = async (blobUrl) => {
+  const handleDataAvailable = async (blobUrl) => {
     // Load recorded audio into WaveSurfer for playback
     if (wavesurfer.current) {
       wavesurfer.current.load(blobUrl);
     }
 
-    // Fetch the Blob from the blobUrl
     const response = await fetch(blobUrl);
-    const blob = await response.blob();
+    const webmBlob = await response.blob();
 
-    // Create a File from the Blob
-    const file = new File([blob], `${label}.wav`, { type: blob.type });
-
-    // Pass the File object to the parent component
-    onRecordingComplete(file);
+    convertWebmToWav(webmBlob, (wavBlob) => {
+      const file = new File([wavBlob], `${label}.wav`, { type: 'audio/wav' });
+      onRecordingComplete(file);
+    });
   };
 
   return (
     <div className="bg-white bg-opacity-10 px-10 py-5 my-6 rounded-md">
       <div className="flex justify-between items-center mb-4">
-        {/* Label */}
         <h2 className="text-lg font-semibold">{label}</h2>
-        {/* Close Button */}
         {onClose && (
           <button onClick={onClose} className="text-red-500 hover:text-red-700">
             <FaTimes size={20} />
@@ -64,7 +58,6 @@ const AudioRecorder = ({ label, onClose,onRecordingComplete }) => {
         onStop={handleDataAvailable}
         render={({ status, startRecording, stopRecording, mediaBlobUrl }) => (
           <>
-            {/* Audio Controls */}
             <div className="flex gap-x-5 mx-auto w-full justify-center items-center mt-5">
               <button
                 onClick={startRecording}
@@ -80,10 +73,8 @@ const AudioRecorder = ({ label, onClose,onRecordingComplete }) => {
               </button>
             </div>
 
-            {/* Display audio waveform */}
             <div className="mt-4" ref={waveformRef} />
 
-            {/* Audio playback after recording */}
             <div className="mx-auto flex justify-center items-center mt-4">
               {mediaBlobUrl && <audio src={mediaBlobUrl} controls />}
             </div>
@@ -93,5 +84,59 @@ const AudioRecorder = ({ label, onClose,onRecordingComplete }) => {
     </div>
   );
 };
+
+// Include the conversion functions here or import them if they are defined elsewhere
+function convertWebmToWav(webmBlob, callback) {
+  const fileReader = new FileReader();
+  fileReader.onload = function () {
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    audioContext.decodeAudioData(fileReader.result, function (buffer) {
+      const wavBlob = bufferToWav(buffer);
+      callback(wavBlob);
+    });
+  };
+  fileReader.readAsArrayBuffer(webmBlob);
+}
+
+function bufferToWav(buffer) {
+  const numberOfChannels = buffer.numberOfChannels;
+  const sampleRate = buffer.sampleRate;
+  const format = 1; // PCM
+  const bitDepth = 16;
+
+  let wav = new Uint8Array(44 + buffer.length * numberOfChannels * 2);
+  let view = new DataView(wav.buffer);
+
+  function writeString(view, offset, string) {
+    for (let i = 0; i < string.length; i++) {
+      view.setUint8(offset + i, string.charCodeAt(i));
+    }
+  }
+
+  writeString(view, 0, 'RIFF');
+  view.setUint32(4, 36 + buffer.length * numberOfChannels * 2, true);
+  writeString(view, 8, 'WAVE');
+  writeString(view, 12, 'fmt ');
+  view.setUint32(16, 16, true);
+  view.setUint16(20, format, true);
+  view.setUint16(22, numberOfChannels, true);
+  view.setUint32(24, sampleRate, true);
+  view.setUint32(28, sampleRate * numberOfChannels * 2, true);
+  view.setUint16(32, numberOfChannels * 2, true);
+  view.setUint16(34, bitDepth, true);
+  writeString(view, 36, 'data');
+  view.setUint32(40, buffer.length * numberOfChannels * 2, true);
+
+  let offset = 44;
+  for (let i = 0; i < buffer.length; i++) {
+    for (let channel = 0; channel < numberOfChannels; channel++) {
+      const sample = buffer.getChannelData(channel)[i];
+      view.setInt16(offset, sample * 0x7FFF, true);
+      offset += 2;
+    }
+  }
+
+  return new Blob([wav], { type: 'audio/wav' });
+}
 
 export default AudioRecorder;
