@@ -61,18 +61,18 @@ const HomePage = () => {
      
     >
       {/* Navbar */}
-      <nav className="absolute top-0 left-0 right-0 flex justify-between p-5">
-        <div className="text-2xl font-bold">Project SIH</div>
+      <nav className="absolute  top-0 left-0 right-0 flex justify-between mx-10 p-5">
+        <div className="text-2xl font-bold bg-gradient-to-b text-transparent bg-clip-text from-[#1BCBBF] to-[#3476E5] ">Project SIH</div>
         <div className="space-x-4">
-          <span onClick={()=>navigate("/about")} className="hover:underline hover:cursor-pointer hover:text-blue-500">About</span>
-          <span onClick={()=>navigate("/team")} href="#" className="hover:underline hover:cursor-pointer hover:text-blue-500">Team</span>
+          <span onClick={()=>navigate("/about")} className="bg-gradient-to-b text-transparent bg-clip-text from-[#1BCBBF] to-[#3476E5] text-xl hover:underline hover:cursor-pointer tex hover:text-blue-500">About</span>
+          <span onClick={()=>navigate("/team")} href="#" className="bg-gradient-to-b text-transparent bg-clip-text from-[#1BCBBF] to-[#3476E5] text-xl hover:underline hover:cursor-pointer hover:text-blue-500">Team</span>
         </div>
       </nav>
 
       {/* Main Content */}
       <div  style={{ backgroundImage: `url(${hero})` }} className='flex justify-center items-center w-full h-full'>
         <div  className="text-center mt-4">
-        <h1 className='text-3xl text-blue-500'>FluffyPeanuts SIH 2024</h1>
+        <h1 className='text-3xl bg-gradient-to-b text-transparent bg-clip-text from-[#1BCBBF] to-[#3476E5] '>FluffyPeanuts SIH 2024</h1>
          <h1 className='text-lg'>Problem Statement ID - 1608</h1>
         <h1 className="text-3xl my-2 font-semibold">
           Few Shot Language Agnostic Keyword Spotting System
