@@ -30,18 +30,21 @@ const AudioRecorder = ({ label, onClose,onRecordingComplete }) => {
     };
   }, []);
 
-  const handleDataAvailable = (blobUrl) => {
+ const handleDataAvailable = async (blobUrl) => {
     // Load recorded audio into WaveSurfer for playback
     if (wavesurfer.current) {
       wavesurfer.current.load(blobUrl);
     }
 
-    
-          
-            onRecordingComplete(blobUrl);
-        
-      
-    
+    // Fetch the Blob from the blobUrl
+    const response = await fetch(blobUrl);
+    const blob = await response.blob();
+
+    // Create a File from the Blob
+    const file = new File([blob], `${label}.wav`, { type: blob.type });
+
+    // Pass the File object to the parent component
+    onRecordingComplete(file);
   };
 
   return (

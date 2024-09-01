@@ -133,12 +133,12 @@ const onSlaveRecordingComplete = (blob) => {
               <div className='flex flex-row justify-between gap-x-10'>
                 <div>
                  <AudioUpload master={true} setMasterAudioBlob={setMasterAudioBlob}></AudioUpload>
-                  <AudioRecorder onRecordingComplete={onMasterRecordingComplete} />
+                  <AudioRecorder label="master" onRecordingComplete={onMasterRecordingComplete} />
                  
                 </div>
                 <div>
                   <AudioUpload slave={true} setSlaveAudioBlob={setSlaveAudioBlob}></AudioUpload>
-                  <AudioRecorder onRecordingComplete={onSlaveRecordingComplete} />
+                  <AudioRecorder label="slave" onRecordingComplete={onSlaveRecordingComplete} />
                  
                 </div>
               </div>
