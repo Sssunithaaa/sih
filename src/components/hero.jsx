@@ -104,8 +104,8 @@ const HomePage = () => {
         <div className="flex items-center justify-center px-2 mt-0">
           <NameIcon label="Master" />
           <div className="h-1 w-12 bg-transparent"></div> {/* Connecting line */}
-          <NameIcon label="Slave" />
-          <div className="h-1 w-12 bg-transparent"></div> {/* Connecting line */}
+          {/* <NameIcon label="Slave" />
+          <div className="h-1 w-12 bg-transparent"></div> Connecting line */}
           <NameIcon label="Language" />
           <div className="h-1 w-12 bg-transparent"></div> {/* Connecting line */}
           <NameIcon label="Result" />
