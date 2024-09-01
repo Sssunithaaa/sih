@@ -4,7 +4,7 @@ import { FaCheckCircle, FaCircle, FaUpload,FaCheck } from 'react-icons/fa';
 import hero from '../assets/hero.png'; // Make sure to use the correct path to your image
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-
+import { AudioRecorder } from 'react-audio-voice-recorder';
 const HomePage = () => {
    const [master, setMaster] = useState(true)
   const [slave, setSlave] = useState(false)
@@ -54,6 +54,15 @@ const HomePage = () => {
       'audio/*': ['.mp3', '.wav'],
     }
   });
+  const addAudioElement = (blob) => {
+  const url = URL.createObjectURL(blob);
+  const audio = document.createElement("audio");
+  audio.src = url;
+  audio.controls = true;
+  document.body.appendChild(audio);
+};
+
+
   const navigate = useNavigate()
   return (
     <div
@@ -86,8 +95,8 @@ const HomePage = () => {
         <div className="flex items-center justify-center">
           <StepIcon isActive={master} label="Master" />
           <div className={`h-[2px] w-16 ${slave ? "bg-green-500" : "bg-gray-500"} `}></div> {/* Connecting line */}
-          <StepIcon isActive={slave} label="Slave" />
-          <div className={`h-[2px] w-16 ${language ? "bg-green-500" : "bg-gray-500"} `}></div> {/* Connecting line */}
+          {/* <StepIcon isActive={slave} label="Slave" />
+          <div className={`h-[2px] w-16 ${language ? "bg-green-500" : "bg-gray-500"} `}></div> Connecting line */}
           <StepIcon isActive={language} label="Language" />
           <div className={`h-[2px] w-16 ${keyword ? "bg-green-500" : "bg-gray-500"} `}></div> {/* Connecting line */}
           <StepIcon isActive={keyword} label="Result" />
@@ -105,7 +114,7 @@ const HomePage = () => {
 
         {/* File Upload Section */}
        <div className="mt-8">
-        {language ? <div className='w-80 h-40 bg-white bg-opacity-10 rounded-lg flex mx-auto flex-col items-center justify-center border-2 border-dashed border-gray-600 hover:border-gray-400 cursor-pointer'>Language</div> : keyword ? <div className='w-80 h-40 bg-white bg-opacity-10 rounded-lg flex mx-auto flex-col items-center justify-center border-2 border-dashed border-gray-600 hover:border-gray-400 cursor-pointer'>Keyword</div> : <div><div {...getRootProps()} className="w-96 h-40 bg-white bg-opacity-10 rounded-lg flex mx-auto flex-col items-center justify-center border-2 border-dashed border-gray-600 hover:border-gray-400 cursor-pointer">
+        {language ? <div className='w-80 h-40 bg-white bg-opacity-10 rounded-lg flex mx-auto flex-col items-center justify-center border-2 border-dashed border-gray-600 hover:border-gray-400 cursor-pointer'>Language</div> : keyword ? <div className='w-80 h-40 bg-white bg-opacity-10 rounded-lg flex mx-auto flex-col items-center justify-center border-2 border-dashed border-gray-600 hover:border-gray-400 cursor-pointer'>Keyword</div> :<div className='flex flex-row justify-between gap-x-10'><div><div {...getRootProps()} className="w-96 h-40 bg-white bg-opacity-10 rounded-lg flex mx-auto flex-col items-center justify-center border-2 border-dashed border-gray-600 hover:border-gray-400 cursor-pointer">
           <input {...getInputProps()} />
           <FaUpload className="text-4xl text-gray-400 mb-3" />
           {isDragActive ? (
@@ -122,6 +131,15 @@ const HomePage = () => {
           </button>
         </div>
       )}
+      {/* <AudioRecorder 
+      onRecordingComplete={addAudioElement}
+      audioTrackConstraints={{
+        noiseSuppression: true,
+        echoCancellation: true,
+      }} 
+      downloadOnSavePress={true}
+      downloadFileExtension="webm"
+    /> */}
       {uploadProgress>0 && (
         <div className="relative pt-1 max-w-md mx-auto">
           <div className="flex mb-2 items-center justify-between">
@@ -143,7 +161,17 @@ const HomePage = () => {
             />
           </div>
         </div>
-      )}</div>}
+        
+      )}</div><div {...getRootProps()} className="w-96 h-40 bg-white bg-opacity-10 rounded-lg flex mx-auto flex-col items-center justify-center border-2 border-dashed border-gray-600 hover:border-gray-400 cursor-pointer">
+          <input {...getInputProps()} />
+          <FaUpload className="text-4xl text-gray-400 mb-3" />
+          {isDragActive ? (
+            <span className="text-gray-400">Drop the files here ...</span>
+          ) : (
+            <span className="text-gray-400">Drag & drop files or <span className="text-blue-500 underline">Browse</span></span>
+          )}
+          <span className="text-xs text-gray-500">Supported formats: MP3/WAV</span>
+        </div></div>}
       </div>
       </div>
       </div>

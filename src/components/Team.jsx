@@ -12,26 +12,11 @@ const Team = () => {
       className="min-h-screen bg-black bg-cover bg-fixed bg-no-repeat text-white flex flex-col items-center justify-center"
       style={{ backgroundImage: `url(${hero})` }}
     >
-      <nav className="absolute top-0 left-0 right-0 flex justify-between p-5">
-        <div
-          onClick={() => navigate("/")}
-          className="text-2xl hover:cursor-pointer font-bold"
-        >
-          Project SIH
-        </div>
+      <nav className="absolute  top-0 left-0 right-0 flex justify-between mx-10 p-5">
+        <div className="text-2xl font-bold bg-gradient-to-b text-transparent bg-clip-text from-[#1BCBBF] to-[#3476E5] ">Project SIH</div>
         <div className="space-x-4">
-          <span
-            onClick={() => navigate("/about")}
-            className="hover:underline hover:cursor-pointer hover:text-blue-500"
-          >
-            About
-          </span>
-          <span
-            onClick={() => navigate("/team")}
-            className="hover:underline text-blue-400 hover:cursor-pointer hover:text-blue-500"
-          >
-            Team
-          </span>
+          <span onClick={()=>navigate("/about")} className="bg-gradient-to-b text-transparent bg-clip-text from-[#1BCBBF] to-[#3476E5] text-xl hover:underline hover:cursor-pointer tex hover:text-blue-500">About</span>
+          <span onClick={()=>navigate("/team")} href="#" className="bg-gradient-to-b text-transparent bg-clip-text from-[#1BCBBF] to-[#3476E5] text-xl hover:underline hover:cursor-pointer hover:text-blue-500">Team</span>
         </div>
       </nav>
 
