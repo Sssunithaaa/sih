@@ -72,7 +72,7 @@ const HomePage = () => {
       {/* Main Content */}
       <div  style={{ backgroundImage: `url(${hero})` }} className='flex justify-center items-center w-full h-full'>
         <div  className="text-center mt-4">
-        <h1 className='text-3xl bg-gradient-to-b text-transparent bg-clip-text from-[#1BCBBF] to-[#3476E5] '>FluffyPeanuts SIH 2024</h1>
+        <h1 className='text-3xl font-semibold bg-gradient-to-b text-transparent bg-clip-text from-[#1BCBBF] to-[#3476E5] '>FluffyPeanuts SIH 2024</h1>
          <h1 className='text-lg'>Problem Statement ID - 1608</h1>
         <h1 className="text-3xl my-2 font-semibold">
           Few Shot Language Agnostic Keyword Spotting System
@@ -105,7 +105,7 @@ const HomePage = () => {
 
         {/* File Upload Section */}
        <div className="mt-8">
-        {language ? <div className='w-80 h-40 bg-white bg-opacity-10 rounded-lg flex mx-auto flex-col items-center justify-center border-2 border-dashed border-gray-600 hover:border-gray-400 cursor-pointer'>Language</div> : keyword ? <div className='w-80 h-40 bg-white bg-opacity-10 rounded-lg flex mx-auto flex-col items-center justify-center border-2 border-dashed border-gray-600 hover:border-gray-400 cursor-pointer'>Keyword</div> : <div className='w-80 h-40 bg-white bg-opacity-10 rounded-lg flex mx-auto flex-col items-center justify-center border-2 border-dashed border-gray-600 hover:border-gray-400 cursor-pointer'><div {...getRootProps()} className="w-80 h-40 bg-white bg-opacity-10 rounded-lg flex mx-auto flex-col items-center justify-center border-2 border-dashed border-gray-600 hover:border-gray-400 cursor-pointer">
+        {language ? <div className='w-80 h-40 bg-white bg-opacity-10 rounded-lg flex mx-auto flex-col items-center justify-center border-2 border-dashed border-gray-600 hover:border-gray-400 cursor-pointer'>Language</div> : keyword ? <div className='w-80 h-40 bg-white bg-opacity-10 rounded-lg flex mx-auto flex-col items-center justify-center border-2 border-dashed border-gray-600 hover:border-gray-400 cursor-pointer'>Keyword</div> : <div><div {...getRootProps()} className="w-96 h-40 bg-white bg-opacity-10 rounded-lg flex mx-auto flex-col items-center justify-center border-2 border-dashed border-gray-600 hover:border-gray-400 cursor-pointer">
           <input {...getInputProps()} />
           <FaUpload className="text-4xl text-gray-400 mb-3" />
           {isDragActive ? (
