@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { FaCheckCircle, FaCircle, FaUpload, FaCheck } from 'react-icons/fa';
 import hero from '../assets/hero.png'; // Make sure to use the correct path to your image
 import { useNavigate } from 'react-router-dom';
@@ -10,7 +10,8 @@ import AudioRecorderer from './AudioRecorder';
 const HomePage = () => {
    const [masterAudioBlob, setMasterAudioBlob] = useState(null);
   const [slaveAudioBlob, setSlaveAudioBlob] = useState(null);
-  
+  const [matchResponse, setMatchResponse] = useState(null);
+
   const [master, setMaster] = useState(true);
   const [slave, setSlave] = useState(false);
   const [masterRec, setMasterRec] = useState(true);
@@ -39,6 +40,7 @@ fetch('http://127.0.0.1:8000/match', {
 .then(response => response.json())
 .then(data => {
   console.log('Success:', data);
+  setMatchResponse(data)
 })
 .catch((error) => {
   console.log('Error:', error);
@@ -58,7 +60,23 @@ const onSlaveRecordingComplete = (blob) => {
 };
 
 
+// For testing purposes, you can set the matchResponse state directly like this:
+// useEffect(() => {
+//   setMatchResponse({
+//     master_transcription: "Hello, this is a test recording for the master audio.",
+//     slave_transcription: "Hello, this is a test recording for the slave audio.",
+//     matched_phrase: "test recording",
+//     match_start_index: 15,
+//     similarity_ratio: 0.85
+//   });
+// }, []);
 
+// useEffect(()=> {
+//   if(matchResponse){
+//     setLanguage(true);
+//     setKeyword(true)
+//   }
+// },[matchResponse])
 
 
 
@@ -89,7 +107,7 @@ const onSlaveRecordingComplete = (blob) => {
           <div className='w-96 h-32 mt-8 bg-white rounded-lg flex mx-auto bg-opacity-10 flex-col items-center justify-center border-gray-600 hover:border-gray-400 cursor-pointer'>
             <div className="flex items-center justify-center">
               <StepIcon isActive={master} label="Master" />
-              <div className={`h-[2px] w-16 ${slave ? "bg-green-500" : "bg-gray-500"}`}></div>
+              <div className={`h-[2px] w-16 ${master ? "bg-green-500" : "bg-gray-500"}`}></div>
               <StepIcon isActive={language} label="Language" />
               <div className={`h-[2px] w-16 ${keyword ? "bg-green-500" : "bg-gray-500"}`}></div>
               <StepIcon isActive={keyword} label="Result" />
@@ -106,9 +124,10 @@ const onSlaveRecordingComplete = (blob) => {
           {/* File Upload Section */}
           <div className="mt-8">
             {language ? (
-              <div className='w-80 h-40 bg-white bg-opacity-10 rounded-lg flex mx-auto flex-col items-center justify-center border-2 border-dashed border-gray-600 hover:border-gray-400 cursor-pointer'>Language</div>
+              // <div className='w-80 h-40 bg-white bg-opacity-10 rounded-lg flex mx-auto flex-col items-center justify-center border-2 border-dashed border-gray-600 hover:border-gray-400 cursor-pointer'>Language</div>
+              <div></div>
             ) : keyword ? (
-              <div className='w-80 h-40 bg-white bg-opacity-10 rounded-lg flex mx-auto flex-col items-center justify-center border-2 border-dashed border-gray-600 hover:border-gray-400 cursor-pointer'>Keyword</div>
+              <div></div>
             ) : (
               <div className='flex flex-row justify-between gap-x-10'>
                 <div>
@@ -129,7 +148,16 @@ const onSlaveRecordingComplete = (blob) => {
               </div>
             )}
           </div>
-          <div className='px-5 py-3 w-[20%] flex mx-auto justify-center items-center rounded-md text-md hover:cursor-pointer  bg-gradient-to-b  from-[#1BCBBF] to-[#3476E5] ' onClick={sendAudioToBackend}>Get result</div>
+          {matchResponse ?  
+     <div className="bg-white bg-opacity-10 p-6 mt-8 rounded-lg ">
+       <h2 className="text-2xl font-semibold mb-4">Match Results</h2>
+       <p><strong>Master Transcription:</strong> {matchResponse.master_transcription}</p>
+       <p><strong>Slave Transcription:</strong> {matchResponse.slave_transcription}</p>
+       <p><strong>Matched Phrase:</strong> {matchResponse.matched_phrase}</p>
+       <p><strong>Match Start Index:</strong> {matchResponse.match_start_index}</p>
+       <p><strong>Similarity Ratio:</strong> {matchResponse.similarity_ratio}</p>
+     </div>
+  :  <div className='px-5 py-3 w-[20%] flex mx-auto justify-center items-center rounded-md text-md hover:cursor-pointer  bg-gradient-to-b  from-[#1BCBBF] to-[#3476E5] ' onClick={sendAudioToBackend}>Get result</div>}
         </div>
       </div>
     </div>
