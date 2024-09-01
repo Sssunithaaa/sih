@@ -83,7 +83,7 @@ const onSlaveRecordingComplete = (blob) => {
 
 
   return (
-    <div className="min-h-screen h-full bg-black bg-cover bg-fixed bg-no-repeat text-white flex flex-col items-center justify-center">
+    <div className="min-h-screen h-full  bg-black bg-cover bg-fixed bg-no-repeat text-white flex flex-col items-center justify-center">
       {/* Navbar */}
       <nav className="absolute top-0 left-0 right-0 flex justify-between mx-10 p-5">
         <div className="text-2xl font-bold bg-gradient-to-b text-transparent bg-clip-text from-[#1BCBBF] to-[#3476E5]">Project SIH</div>
@@ -94,7 +94,7 @@ const onSlaveRecordingComplete = (blob) => {
       </nav>
 
       {/* Main Content */}
-      <div style={{ backgroundImage: `url(${hero})` }} className='flex justify-center py-10 items-center w-full h-full'>
+      <div style={{ backgroundImage: `url(${hero})` }} className='flex justify-center mt-8 py-10 items-center w-full h-full'>
         <div className="text-center mt-4">
           <h1 className='text-3xl font-semibold bg-gradient-to-b text-transparent bg-clip-text from-[#1BCBBF] to-[#3476E5]'>FluffyPeanuts SIH 2024</h1>
           <h1 className='text-lg'>Problem Statement ID - 1680</h1>
@@ -132,12 +132,14 @@ const onSlaveRecordingComplete = (blob) => {
             ) : (
               <div className='flex flex-row justify-between gap-x-10'>
                 <div>
-                 <AudioUpload master={true} setMasterAudioBlob={setMasterAudioBlob}></AudioUpload>
+                 <AudioUpload master={true} setMasterAudioBlob={setMasterAudioBlob} setMasterRec={setMasterRec}></AudioUpload>
+                 {masterRec}
                   <AudioRecorder label="master" onRecordingComplete={onMasterRecordingComplete} />
                  
                 </div>
                 <div>
-                  <AudioUpload slave={true} setSlaveAudioBlob={setSlaveAudioBlob}></AudioUpload>
+                  <AudioUpload slave={true} setSlaveAudioBlob={setSlaveAudioBlob} setSlaveRec={setSlaveRec}></AudioUpload>
+                  {slaveRec}
                   <AudioRecorder label="slave" onRecordingComplete={onSlaveRecordingComplete} />
                  
                 </div>
