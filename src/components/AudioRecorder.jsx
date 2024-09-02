@@ -1,15 +1,17 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { ReactMediaRecorder } from "react-media-recorder";
 import WaveSurfer from "wavesurfer.js";
 import { AiFillAudio, AiOutlineAudioMuted } from "react-icons/ai";
 import { FaTimes } from "react-icons/fa";
 
-const AudioRecorder = ({ label, onClose, onRecordingComplete }) => {
+const AudioRecorder = ({ label, onClose, onRecordingComplete, height = 100 }) => {
   const waveformRef = useRef(null);
   const wavesurfer = useRef(null);
+  const [mediaBlobUrl, setMediaBlobUrl] = useState(null); 
+  const [isRecordingComplete, setIsRecordingComplete] = useState(false); 
 
   useEffect(() => {
-    if (waveformRef.current) {
+    if (waveformRef.current) {  
       wavesurfer.current = WaveSurfer.create({
         container: waveformRef.current,
         waveColor: "#D9DCFF",
@@ -17,7 +19,7 @@ const AudioRecorder = ({ label, onClose, onRecordingComplete }) => {
         cursorColor: "#4353FF",
         barWidth: 2,
         responsive: true,
-        height: 100,
+        height: height,
       });
     }
 
@@ -26,10 +28,12 @@ const AudioRecorder = ({ label, onClose, onRecordingComplete }) => {
         wavesurfer.current.destroy();
       }
     };
-  }, []);
+  }, [height, isRecordingComplete]);  
 
   const handleDataAvailable = async (blobUrl) => {
-    // Load recorded audio into WaveSurfer for playback
+    setMediaBlobUrl(blobUrl);  
+  
+
     if (wavesurfer.current) {
       wavesurfer.current.load(blobUrl);
     }
@@ -38,15 +42,17 @@ const AudioRecorder = ({ label, onClose, onRecordingComplete }) => {
     const webmBlob = await response.blob();
 
     convertWebmToWav(webmBlob, (wavBlob) => {
-      const file = new File([wavBlob], `${label}.wav`, { type: 'audio/wav' });
+      const file = new File([wavBlob], `${label}.wav`, { type: "audio/wav" });
       onRecordingComplete(file);
     });
+  
   };
+  
 
   return (
     <div className="bg-white bg-opacity-10 px-10 py-5 my-6 rounded-md">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-semibold">{label}</h2>
+        <h2 className="text-lg font-semibold">{label === "master" ? "Sample corpus" : "Keyword"}</h2>
         {onClose && (
           <button onClick={onClose} className="text-red-500 hover:text-red-700">
             <FaTimes size={20} />
@@ -56,7 +62,7 @@ const AudioRecorder = ({ label, onClose, onRecordingComplete }) => {
       <ReactMediaRecorder
         audio
         onStop={handleDataAvailable}
-        render={({ status, startRecording, stopRecording, mediaBlobUrl }) => (
+        render={({  startRecording, stopRecording }) => (
           <>
             <div className="flex gap-x-5 mx-auto w-full justify-center items-center mt-5">
               <button
@@ -73,11 +79,15 @@ const AudioRecorder = ({ label, onClose, onRecordingComplete }) => {
               </button>
             </div>
 
+      
             <div className="mt-4" ref={waveformRef} />
 
-            <div className="mx-auto flex justify-center items-center mt-4">
-              {mediaBlobUrl && <audio src={mediaBlobUrl} controls />}
-            </div>
+   
+            {mediaBlobUrl && (
+              <div className="mx-auto flex justify-center items-center mt-4">
+                <audio src={mediaBlobUrl} controls />
+              </div>
+            )}
           </>
         )}
       />
